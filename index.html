@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LANDED Mill Marketplace</title>
+<meta name="theme-color" content="#14222F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE  calm, exact, trade-desk serious, like a mill price sheet that does the maths for you
+   IDEA   a steel trading terminal where every offer shows its true landed cost, carbon included
+   PICTURE the ranked offer list itself, each mill a priced lot with a score dial and a CBAM line
+   COLOUR deep steel navy, cool rolled-steel blue, one hot-metal orange for default exposure
+   TYPE   Space Grotesk numbers and titles, Inter text, IBM Plex Sans Thai for Thai */
+:root{color-scheme:light dark;
+--bg:light-dark(#F3F1EC,#0E1822);--panel:light-dark(#FFFFFF,#16232F);--ink:light-dark(#14222F,#E9EEF2);--mute:light-dark(#56636F,#9DAAB6);
+--line:light-dark(#E2DDD3,#263645);--navy:#14222F;--blue:light-dark(#1F6FB2,#5FA4DE);--sky:light-dark(#DCE8F4,#1B3349);--hot:light-dark(#C4581E,#F08A4B);--hotbg:light-dark(#F8E5D9,#3A2417);
+--ok:light-dark(#1F6FB2,#5FA4DE);--chip:light-dark(#EEEAE2,#1E2D3B)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,'IBM Plex Sans Thai',system-ui,sans-serif;overflow-x:clip}
+html[lang=th] body{font-family:'IBM Plex Sans Thai',Inter,system-ui,sans-serif}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.num,.sg{font-family:'Space Grotesk','IBM Plex Sans Thai',sans-serif;font-variant-numeric:tabular-nums}
+header{position:sticky;top:0;z-index:20;background:var(--navy);color:#F3F1EC;box-shadow:0 1px 0 #34495C}
+.hbar{display:flex;align-items:center;gap:16px;padding:12px max(4vw,16px);max-width:1360px;margin:auto}
+.logo{font:700 26px/1 'Space Grotesk',sans-serif;letter-spacing:-1px}
+.logo b{color:#8FBCE6}
+.tag{font-size:13px;color:#9DB3C6;border-left:1px solid #34495C;padding-left:14px}
+.sp{flex:1}
+.lang{display:flex;border:1px solid #34495C;border-radius:22px;padding:3px}
+.lang button{border:0;background:none;color:#B9C6D2;min-height:36px;min-width:44px;border-radius:18px;font-weight:600}
+.lang button.on{background:#F3F1EC;color:var(--navy)}
+.cartb{display:flex;align-items:center;gap:8px;background:#1F6FB2;border:0;color:#fff;border-radius:22px;min-height:44px;padding:0 16px;font-weight:600}
+.cartb .ct{background:#fff;color:#14222F;border-radius:12px;min-width:24px;padding:0 6px;font-size:13px}
+.ctx{background:#1A2C3B;color:#DCE5EC}
+.ctxin{max-width:1360px;margin:auto;padding:12px max(4vw,16px);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end}
+.ctxin label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:#9DB3C6}
+.ctxin select,.ctxin input{background:#0E1A24;border:1px solid #34495C;border-radius:8px;min-height:40px;padding:0 10px;color:#F3F1EC;font-size:16px;width:150px}
+.prod{display:flex;flex-direction:column;gap:2px}
+.prod b{font:600 16px 'Space Grotesk','IBM Plex Sans Thai',sans-serif;color:#fff}
+.prod span{font-size:12px;color:#9DB3C6}
+main{max-width:1360px;margin:auto;padding:20px max(4vw,16px) 64px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .l{font-size:13px;color:var(--mute)}
+.kpi .v{font:700 clamp(22px,2.6vw,30px)/1.1 'Space Grotesk',sans-serif;margin-top:6px}
+.kpi .s{font-size:12px;color:var(--mute);margin-top:2px}
+.kpi.hot .v{color:var(--hot)}.kpi.good .v{color:var(--blue)}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}
+aside.f{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;position:sticky;top:84px}
+.fh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.fh b{font:600 17px 'Space Grotesk','IBM Plex Sans Thai',sans-serif}
+.link{border:0;background:none;color:var(--blue);font-weight:600;min-height:36px}
+.fg{border-top:1px solid var(--line);padding:12px 0}
+.fg h4{margin:0 0 8px;font-size:13px;color:var(--mute);font-weight:600}
+.cks{display:flex;flex-wrap:wrap;gap:6px}
+.ck{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--chip);border-radius:18px;padding:0 12px;min-height:36px;font-size:13px;user-select:none}
+.ck input{position:absolute;opacity:0;width:1px;height:1px}
+.ck.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ck .n{opacity:.6;font-size:12px}
+.rng{width:100%;accent-color:#1F6FB2}
+.rv{display:flex;justify-content:space-between;font-size:13px}
+.tb{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.srch{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0 12px;min-height:44px}
+.srch input{border:0;background:none;outline:0;flex:1;font-size:16px;min-height:42px}
+.sel{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute)}
+.sel select{background:var(--panel);border:1px solid var(--line);border-radius:10px;min-height:44px;padding:0 10px;font-size:16px;color:var(--ink)}
+.fbtn{display:none;min-height:44px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:0 14px;font-weight:600}
+.count{font-size:13px;color:var(--mute);margin:0 0 10px}
+.spons{background:linear-gradient(90deg,var(--sky),transparent 70%);border:1px dashed var(--blue);border-radius:14px;padding:10px 12px;margin-bottom:14px}
+.spons .sl{font-size:12px;color:var(--blue);font-weight:600;margin:0 0 6px 4px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;margin-bottom:10px;animation:in .35s ease both}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+.rk{font:700 15px 'Space Grotesk',Inter,sans-serif;color:var(--mute);text-align:center}
+.dial{--p:50;width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--blue) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;margin-top:4px}
+.dial span{background:var(--panel);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:700 17px 'Space Grotesk',Inter,sans-serif;color:var(--ink)}
+.nm{font:600 17px/1.25 'Space Grotesk','IBM Plex Sans Thai',sans-serif}
+.loc{font-size:13px;color:var(--mute)}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 10px}
+.chip{flex:none;font-size:12px;border-radius:12px;padding:3px 9px;background:var(--chip);white-space:nowrap}
+.chip.v{background:var(--sky);color:var(--blue);font-weight:600}
+.chip.p{background:light-dark(#F1ECDF,#2E2A1E);color:light-dark(#7A5A12,#E2C277);font-weight:600}
+.chip.d{background:var(--hotbg);color:var(--hot);font-weight:600}
+.chip.sp{border:1px dashed var(--blue);background:none;color:var(--blue)}
+.mets{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;align-items:start}
+.met .l{font-size:11.5px;color:var(--mute);line-height:1.2;min-height:2.4em}
+.met .v small{display:block;font:500 11px Inter,sans-serif;color:var(--mute)}
+.met .v{font:600 16px 'Space Grotesk',Inter,sans-serif;white-space:nowrap}
+.met.big .v{font-size:19px}
+.met .v.hot{color:var(--hot)}.met .v.ok{color:var(--blue)}
+.hint{font-size:12px;color:var(--blue);margin-top:6px}
+.acts{display:flex;flex-direction:column;gap:8px;width:150px}
+.btn{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-weight:600;padding:0 14px}
+.btn.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+:root[data-theme=dark] .btn.pri,.btn.pri.done{background:var(--blue);border-color:var(--blue)}
+.btn.done{background:var(--blue);border-color:var(--blue);color:#fff}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:40px;text-align:center;color:var(--mute)}
+.scrim{position:fixed;inset:0;background:#0009;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:var(--bg);z-index:50;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dh{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--navy);color:#fff}
+.dh h2{margin:0;font:600 20px/1.2 'Space Grotesk','IBM Plex Sans Thai',sans-serif;flex:1}
+.x{border:0;background:#ffffff1a;color:#fff;width:44px;height:44px;border-radius:22px;font-size:20px}
+.db{padding:18px 20px;overflow-y:auto;flex:1}
+.df{padding:14px 20px;border-top:1px solid var(--line);background:var(--panel)}
+.sec{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.sec h3{margin:0 0 10px;font:600 15px 'Space Grotesk','IBM Plex Sans Thai',sans-serif}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;font-size:14px}
+.kv dt{color:var(--mute)}.kv dd{margin:0;text-align:right;font-weight:600}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;padding:6px 0;font-size:14px}
+.dot{width:14px;height:14px;border-radius:50%;margin-top:4px;background:var(--line)}
+.dot.y{background:var(--blue)}.dot.w{background:#D6A23A}.dot.n{background:var(--hot)}
+.steps small{display:block;color:var(--mute);font-size:12px}
+.trend{display:grid;grid-template-columns:52px minmax(0,1fr) 64px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:6px}
+.bar i.hot{background:var(--hot)}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.qty button{border:0;background:none;width:44px;height:44px;font-size:18px}
+.qty input{width:64px;text-align:center;border:0;background:none;font-size:16px;font-weight:600}
+.line{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.line .top{display:flex;justify-content:space-between;gap:8px}
+.line .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.line select,.rfq select,.rfq textarea{background:var(--panel);border:1px solid var(--line);border-radius:10px;min-height:44px;padding:0 10px;font-size:16px;color:var(--ink)}
+.rm{border:0;background:none;color:var(--hot);font-weight:600;min-height:44px}
+.sum .kv{font-size:14px}.sum .tot dd,.sum .tot dt{font:700 18px 'Space Grotesk',Inter,sans-serif;color:var(--ink)}
+.rfq label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute);margin-bottom:10px}
+.rfq textarea{min-height:70px;padding:10px}
+.ok{text-align:center;padding:10px 0}
+.ok .ref{font:700 26px 'Space Grotesk',Inter,sans-serif;color:var(--blue)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;z-index:60;opacity:0;transition:.2s;pointer-events:none;font-weight:500}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+details.meth{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--mute)}
+details.meth summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:28px}
+.demo{font-size:12px;color:var(--mute);margin-top:10px}
+@media(max-width:1100px){.mets{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}
+aside.f{position:fixed;top:0;left:0;bottom:0;width:min(340px,90%);z-index:50;border-radius:0;transform:translateX(-102%);transition:transform .25s;overflow-y:auto}
+aside.f.on{transform:none}.fbtn{display:block}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.tag{display:none}}
+@media(max-width:600px){.card{grid-template-columns:48px minmax(0,1fr);gap:12px}.acts{grid-column:1/-1;flex-direction:row;width:auto}.acts .btn{flex:1}
+.dial{width:48px;height:48px}.dial span{width:38px;height:38px;font-size:15px}.ctxin select,.ctxin input{width:128px}.prod{flex-basis:100%}.logo{font-size:22px}.cartb .lbl{display:none}}
+</style>
+</head>
+<body>
+<header>
+<div class="hbar">
+<div class="logo">LANDED<b>.</b></div>
+<div class="tag" data-i="tagline">Verified steel mill marketplace</div>
+<div class="sp"></div>
+<div class="lang" role="group" aria-label="Language"><button id="lEN" class="on">EN</button><button id="lTH">TH</button></div>
+<button class="cartb" id="openCart" aria-label="RFQ basket"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h2l2 11h10l2-8H7"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg><span class="lbl" data-i="basket">RFQ basket</span><span class="ct" id="ct">0</span></button>
+</div>
+</header>
+<div class="ctx"><div class="ctxin">
+<div class="prod"><span data-i="sourcing">Sourcing wire rod for</span><b data-i="product">Carbon steel bolts, HS 7318 15, export to EU</b></div>
+<label><span data-i="year">EU import year</span><select id="yr"><option>2026</option><option>2027</option><option>2028</option><option>2030</option><option>2034</option></select></label>
+<label><span data-i="vol">Your bolt output, t a year</span><input id="vol" type="number" inputmode="numeric" min="0" step="50" value="500"></label>
+<label><span data-i="eua">Carbon price, € per t CO₂</span><input id="eua" type="number" inputmode="decimal" min="0" step="1" value="90"></label>
+</div></div>
+
+<main>
+<section class="kpis" id="kpis"></section>
+<div class="layout">
+<aside class="f" id="filters" aria-label="Filters"></aside>
+<section>
+<div class="tb">
+<button class="fbtn" id="fOpen" data-i="filters">Filters</button>
+<div class="srch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" data-ph="search" placeholder="Search mill, city or grade"></div>
+<label class="sel"><span data-i="sortby">Sort by</span><select id="sort"></select></label>
+</div>
+<p class="count" id="count"></p>
+<div id="spons"></div>
+<div id="list"></div>
+<details class="meth"><summary data-i="methT">How LANDED scores and prices each mill</summary><div id="meth"></div></details>
+<p class="demo" data-i="demo">Demo data. All mills are fictional. CBAM figures use EU default values (Implementing Regulation 2026/1740) and illustrative intensities.</p>
+</section>
+</div>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="detail" role="dialog" aria-modal="true" aria-labelledby="dT"><div class="dh"><h2 id="dT"></h2><button class="x" data-close aria-label="Close">×</button></div><div class="db" id="dB"></div><div class="df" id="dF"></div></div>
+<div class="drawer" id="cart" role="dialog" aria-modal="true" aria-labelledby="cT"><div class="dh"><h2 id="cT" data-i="basket">RFQ basket</h2><button class="x" data-close aria-label="Close">×</button></div><div class="db" id="cB"></div><div class="df" id="cF"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+const T={en:{tagline:"Verified steel mill marketplace",basket:"RFQ basket",sourcing:"Sourcing wire rod for",product:"Carbon steel bolts, HS 7318 15, export to EU",year:"EU import year",vol:"Your bolt output, t a year",eua:"Carbon price, € per t CO₂",filters:"Filters",search:"Search mill, city or grade",sortby:"Sort by",methT:"How LANDED scores and prices each mill",demo:"Demo data. All mills are fictional. CBAM figures use EU default values (Implementing Regulation 2026/1740) and illustrative intensities.",
+s_score:"LANDED score",s_total:"Total landed cost",s_cbam:"CBAM cost",s_price:"Price per tonne",s_ship:"Shipping cost",s_lead:"Lead time",s_co2:"Lowest carbon",s_name:"Name A to Z",
+k1:"Best total landed cost",k1s:"per t of bolts, all costs in",k2:"Lowest CBAM cost",k2s:"per t of bolts",k3:"CBAM at the EU default",k3s:"per t of bolts if no mill data",k4:"Your potential saving",k4s:"a year vs the default, best verified mill",
+country:"Country",route:"Steel route",eaf:"Scrap EAF",bof:"Blast furnace BF-BOF",status:"Emissions data",ver:"Verified",prov:"Provided, not verified",none:"No data",maxship:"Max shipping cost",maxlead:"Max lead time",cert:"Certification",iatf:"IATF 16949 only",reset:"Reset",days:"days",
+showing:"Showing {n} of {m} mills, ranked by",spons:"Sponsored · placement only, never changes the score",sponsTag:"Sponsored",
+fob:"FOB price",ship:"Shipping",duty:"Duty",cbam:"CBAM per t bolts",total:"Total per t bolts",lead:"Lead time",co2:"CO₂ per t steel",dflt:"default",
+details:"Details",add:"Add to RFQ",added:"In basket",ifver:"If verified, CBAM would be {v} per t",nomatch:"No mills match these filters.",clear:"Clear filters",
+ov:"Offer",plant:"Plant",cap:"Capacity",grades:"Grades",certs:"Certificates",moq:"Minimum order",terms:"Payment terms",inc:"Incoterm",otd:"On-time delivery",
+trail:"Verification trail",t1:"Mill uploaded emissions records",t2:"AI linked records to this plant",t3:"Satellite activity check",t4:"Accredited CBAM verifier",pend:"Pending",notup:"Not uploaded",consistent:"Activity consistent with reported output",nocheck:"Not checked yet",
+traj:"CBAM per t of bolts over time",qty:"Quantity, t of wire rod",addN:"Add {q} t to RFQ",upd:"Update basket",
+empty:"Your RFQ basket is empty. Add mills from the list to request quotes.",month:"Delivery",remove:"Remove",sum:"Summary",rod:"Wire rod",bolts:"Bolt output",goods:"Steel, shipping and duty",cbx:"CBAM exposure",tot:"Estimated total",avg:"Average CO₂ intensity",
+port:"Discharge port",incS:"Incoterm",pay:"Payment",note:"Note to mills",noteph:"Grade, coil weight, packing or test needs",send:"Send RFQ to {n} mills",sent:"RFQ sent",sentS:"Mills usually reply within 48 hours. Quotes arrive in your basket with verified CBAM figures.",ref:"Reference",ev:"After delivery LANDED builds your CBAM evidence pack, with plant ID, verifier report and embedded emissions per lot.",newb:"Start a new RFQ",
+toastAdd:"Added to RFQ basket",toastRm:"Removed from basket",
+meth:"<p><b>LANDED score</b> out of 100 combines total landed cost (45%), carbon intensity (25%), data trust (20%: verified 100, provided 55, none 0) and on-time delivery (10%). Sponsored placement never changes it.</p><p><b>CBAM per t of bolts</b> assumes 1.10 t of wire rod per t of bolts plus 0.10 t CO₂ from your own plant. Verified mills use their plant data minus the free-allocation benchmark for their route (BF-BOF 1.364, scrap EAF 0.066) times the year's CBAM factor (97.5% in 2026 to 0% in 2034). Unverified mills fall back to the EU default for Thai bolts, 2.408 t CO₂ per t plus the mark-up (10% in 2026, 20% in 2027, 30% from 2028).</p><p><b>Total landed cost</b> is 1.10 × (FOB + shipping) × (1 + duty), plus CBAM at €1 = US$1.08. Carbon price and year are yours to change above.</p>"},
+th:{tagline:"ตลาดโรงงานเหล็กที่ทวนสอบแล้ว",basket:"ใบขอราคา",sourcing:"จัดหาลวดเหล็กสำหรับ",product:"สลักเกลียวเหล็กกล้าคาร์บอน HS 7318 15 ส่งออกสหภาพยุโรป",year:"ปีที่นำเข้า EU",vol:"ปริมาณสลักเกลียวที่ผลิต ตันต่อปี",eua:"ราคาคาร์บอน € ต่อตัน CO₂",filters:"ตัวกรอง",search:"ค้นหาโรงงาน เมือง หรือเกรดเหล็ก",sortby:"เรียงตาม",methT:"LANDED ให้คะแนนและคำนวณต้นทุนอย่างไร",demo:"ข้อมูลตัวอย่าง โรงงานทั้งหมดเป็นชื่อสมมติ ตัวเลข CBAM ใช้ค่าเริ่มต้นของ EU (ระเบียบ 2026/1740) และค่าความเข้มคาร์บอนเพื่อการสาธิต",
+s_score:"คะแนน LANDED",s_total:"ต้นทุนรวมถึงไทย",s_cbam:"ค่า CBAM",s_price:"ราคาต่อตัน",s_ship:"ค่าขนส่ง",s_lead:"ระยะเวลาส่งมอบ",s_co2:"คาร์บอนต่ำสุด",s_name:"ชื่อ A ถึง Z",
+k1:"ต้นทุนรวมต่ำสุด",k1s:"ต่อตันสลักเกลียว รวมทุกต้นทุน",k2:"ค่า CBAM ต่ำสุด",k2s:"ต่อตันสลักเกลียว",k3:"ค่า CBAM ตามค่าเริ่มต้น EU",k3s:"ต่อตันสลักเกลียว หากไม่มีข้อมูลโรงงาน",k4:"เงินที่คุณประหยัดได้",k4s:"ต่อปี เทียบค่าเริ่มต้น กับโรงงานที่ทวนสอบดีที่สุด",
+country:"ประเทศ",route:"กระบวนการผลิตเหล็ก",eaf:"เตาอาร์คไฟฟ้า เศษเหล็ก",bof:"เตาถลุงเหล็ก BF-BOF",status:"ข้อมูลการปล่อยคาร์บอน",ver:"ทวนสอบแล้ว",prov:"ส่งข้อมูลแล้ว ยังไม่ทวนสอบ",none:"ไม่มีข้อมูล",maxship:"ค่าขนส่งสูงสุด",maxlead:"ระยะส่งมอบสูงสุด",cert:"มาตรฐาน",iatf:"เฉพาะ IATF 16949",reset:"ล้างค่า",days:"วัน",
+showing:"แสดง {n} จาก {m} โรงงาน เรียงตาม",spons:"ผู้สนับสนุน · ได้ตำแหน่งแสดงผลเท่านั้น ไม่มีผลต่อคะแนน",sponsTag:"ผู้สนับสนุน",
+fob:"ราคา FOB",ship:"ค่าขนส่ง",duty:"อากร",cbam:"CBAM ต่อตันสลักเกลียว",total:"รวมต่อตันสลักเกลียว",lead:"ส่งมอบ",co2:"CO₂ ต่อตันเหล็ก",dflt:"ค่าเริ่มต้น",
+details:"รายละเอียด",add:"เพิ่มในใบขอราคา",added:"อยู่ในใบขอราคา",ifver:"หากทวนสอบแล้ว ค่า CBAM จะเหลือ {v} ต่อตัน",nomatch:"ไม่พบโรงงานที่ตรงกับตัวกรอง",clear:"ล้างตัวกรอง",
+ov:"ข้อเสนอ",plant:"ที่ตั้งโรงงาน",cap:"กำลังการผลิต",grades:"เกรดเหล็ก",certs:"มาตรฐานรับรอง",moq:"สั่งขั้นต่ำ",terms:"เงื่อนไขชำระเงิน",inc:"เงื่อนไขการส่งมอบ",otd:"ส่งตรงเวลา",
+trail:"เส้นทางการทวนสอบ",t1:"โรงงานส่งข้อมูลการปล่อยคาร์บอน",t2:"AI เชื่อมข้อมูลกับโรงงานนี้",t3:"ตรวจสอบกิจกรรมด้วยดาวเทียม",t4:"ผู้ทวนสอบ CBAM ที่ได้รับการรับรอง",pend:"รอดำเนินการ",notup:"ยังไม่ส่ง",consistent:"กิจกรรมสอดคล้องกับปริมาณผลิตที่แจ้ง",nocheck:"ยังไม่ได้ตรวจ",
+traj:"ค่า CBAM ต่อตันสลักเกลียวในแต่ละปี",qty:"ปริมาณ ตันลวดเหล็ก",addN:"เพิ่ม {q} ตันในใบขอราคา",upd:"อัปเดตใบขอราคา",
+empty:"ใบขอราคายังว่างอยู่ เพิ่มโรงงานจากรายการเพื่อขอราคา",month:"ส่งมอบ",remove:"ลบ",sum:"สรุป",rod:"ลวดเหล็ก",bolts:"สลักเกลียวที่ผลิตได้",goods:"เหล็ก ค่าขนส่ง และอากร",cbx:"ภาระ CBAM",tot:"ประมาณการรวม",avg:"ความเข้มคาร์บอนเฉลี่ย",
+port:"ท่าเรือปลายทาง",incS:"เงื่อนไขการส่งมอบ",pay:"การชำระเงิน",note:"ข้อความถึงโรงงาน",noteph:"เกรด น้ำหนักคอยล์ การบรรจุ หรือการทดสอบ",send:"ส่งคำขอราคาถึง {n} โรงงาน",sent:"ส่งคำขอราคาแล้ว",sentS:"โรงงานมักตอบกลับภายใน 48 ชั่วโมง ใบเสนอราคาจะเข้ามาในใบขอราคาพร้อมตัวเลข CBAM ที่ทวนสอบแล้ว",ref:"เลขอ้างอิง",ev:"หลังส่งมอบ LANDED จะจัดทำชุดหลักฐาน CBAM ให้ พร้อมรหัสโรงงาน รายงานผู้ทวนสอบ และการปล่อยคาร์บอนต่อล็อต",newb:"เริ่มใบขอราคาใหม่",
+toastAdd:"เพิ่มในใบขอราคาแล้ว",toastRm:"ลบออกจากใบขอราคาแล้ว",
+meth:"<p><b>คะแนน LANDED</b> เต็ม 100 รวมต้นทุนถึงไทย (45%) ความเข้มคาร์บอน (25%) ความน่าเชื่อถือของข้อมูล (20% ทวนสอบแล้ว 100 ส่งข้อมูลแล้ว 55 ไม่มีข้อมูล 0) และการส่งตรงเวลา (10%) ตำแหน่งผู้สนับสนุนไม่มีผลต่อคะแนน</p><p><b>CBAM ต่อตันสลักเกลียว</b> สมมติใช้ลวดเหล็ก 1.10 ตันต่อสลักเกลียว 1 ตัน บวก CO₂ 0.10 ตันจากโรงงานของคุณ โรงงานที่ทวนสอบแล้วใช้ข้อมูลจริงหักค่าเกณฑ์เปรียบเทียบตามกระบวนการผลิต (BF-BOF 1.364 เตาอาร์ค 0.066) คูณปัจจัย CBAM ของปีนั้น (97.5% ในปี 2026 ถึง 0% ในปี 2034) โรงงานที่ยังไม่ทวนสอบใช้ค่าเริ่มต้นของ EU สำหรับสลักเกลียวไทย 2.408 ตัน CO₂ ต่อตัน บวกค่าปรับเพิ่ม (10% ปี 2026, 20% ปี 2027, 30% ตั้งแต่ปี 2028)</p><p><b>ต้นทุนรวมถึงไทย</b> คือ 1.10 × (FOB + ค่าขนส่ง) × (1 + อากร) บวก CBAM ที่ €1 = US$1.08 ปรับปีและราคาคาร์บอนได้ด้านบน</p>"}};
+const CN={TH:{en:"Thailand",th:"ไทย",d:1.920},JP:{en:"Japan",th:"ญี่ปุ่น",d:2.100},KR:{en:"South Korea",th:"เกาหลีใต้",d:2.118},CN:{en:"China",th:"จีน",d:3.169},VN:{en:"Vietnam",th:"เวียดนาม",d:2.350},TW:{en:"Taiwan",th:"ไต้หวัน",d:2.298},ID:{en:"Indonesia",th:"อินโดนีเซีย",d:8.230}};
+const M=[
+{id:"m1",n:"Eastern Seaboard Wire Rod Co., Ltd.",c:"TH",city:"Rayong",r:"EAF",i:0.21,s:"v",p:655,f:14,du:0,l:7,moq:25,otd:98,cap:"620 kt",g:"SWRCH10A, SWRCH18A, SWRCH35K",ce:"ISO 9001, IATF 16949, ISO 14001, EPD",vd:"Oct 2026"},
+{id:"m2",n:"Chao Phraya Long Steel PCL",c:"TH",city:"Samut Prakan",r:"EAF",i:0.48,s:"p",p:628,f:12,du:0,l:5,moq:25,otd:94,cap:"410 kt",g:"SWRCH8A, SWRCH10A, SWRM10",ce:"ISO 9001, ISO 14001"},
+{id:"m3",n:"Saraburi Rolling Mills Co., Ltd.",c:"TH",city:"Saraburi",r:"EAF",i:null,s:"n",p:590,f:18,du:0,l:6,moq:50,otd:88,cap:"280 kt",g:"SWRM6, SWRM10",ce:"ISO 9001"},
+{id:"m4",n:"Kitakyushu Special Steel Works",c:"JP",city:"Kitakyushu",r:"BOF",i:1.62,s:"v",p:760,f:42,du:0,l:28,moq:50,otd:99,cap:"1.8 Mt",g:"SWRCH10A to SWRCH45K, SCM435, SCM440",ce:"ISO 9001, IATF 16949, ISO 14001",vd:"Sep 2026"},
+{id:"m5",n:"Setouchi Wire Rod Corporation",c:"JP",city:"Kurashiki",r:"BOF",i:1.98,s:"v",p:735,f:40,du:0,l:30,moq:50,otd:98,cap:"1.2 Mt",g:"SWRCH18A, SWRCH22A, SWRCH35K",ce:"ISO 9001, IATF 16949",vd:"Aug 2026"},
+{id:"m6",n:"Hanbit Steel Co., Ltd.",c:"KR",city:"Dangjin",r:"BOF",i:1.86,s:"v",p:690,f:36,du:0,l:21,moq:50,otd:96,cap:"2.4 Mt",g:"SWRCH10A, SWRCH35K, SCM435",ce:"ISO 9001, IATF 16949, ISO 14001",vd:"Oct 2026"},
+{id:"m7",n:"Gyeongnam Electric Steel Co.",c:"KR",city:"Changwon",r:"EAF",i:0.58,s:"p",p:705,f:37,du:0,l:20,moq:25,otd:95,cap:"650 kt",g:"SWRCH10A, SWRCH18A",ce:"ISO 9001, IATF 16949"},
+{id:"m8",n:"Jiangsu Huarong Special Steel",c:"CN",city:"Changzhou",r:"BOF",i:2.12,s:"p",p:545,f:31,du:0.1226,l:18,moq:100,otd:90,cap:"3.1 Mt",g:"SWRCH10A, SWRCH35K, SAE1008",ce:"ISO 9001, IATF 16949"},
+{id:"m9",n:"Tangshan Northbay Iron & Steel",c:"CN",city:"Tangshan",r:"BOF",i:null,s:"n",p:515,f:33,du:0.3679,l:20,moq:200,otd:86,cap:"5.5 Mt",g:"SAE1006, SAE1008, Q195",ce:"ISO 9001"},
+{id:"m10",n:"Fujian Minjiang Wire Rod Co.",c:"CN",city:"Fuzhou",r:"EAF",i:0.72,s:"v",p:560,f:30,du:0,l:16,moq:100,otd:93,cap:"900 kt",g:"SWRCH8A, SWRCH10A, SWRCH18A",ce:"ISO 9001, ISO 14001",vd:"Jul 2026"},
+{id:"m11",n:"Ha Tinh Coastal Steel JSC",c:"VN",city:"Ha Tinh",r:"BOF",i:2.06,s:"p",p:568,f:22,du:0,l:12,moq:100,otd:92,cap:"4.0 Mt",g:"SWRCH8A, SWRCH10A, SAE1008",ce:"ISO 9001, ISO 14001",sp:1},
+{id:"m12",n:"Phu My Long Products JSC",c:"VN",city:"Ba Ria Vung Tau",r:"EAF",i:null,s:"n",p:552,f:21,du:0,l:10,moq:50,otd:89,cap:"500 kt",g:"SWRM8, SWRM10",ce:"ISO 9001"},
+{id:"m13",n:"Kaohsiung Fine Wire Corporation",c:"TW",city:"Kaohsiung",r:"BOF",i:1.78,s:"v",p:698,f:32,du:0,l:18,moq:50,otd:97,cap:"1.5 Mt",g:"SWRCH10A to SWRCH45K, SCM435",ce:"ISO 9001, IATF 16949, ISO 14001",vd:"Sep 2026"},
+{id:"m14",n:"Taichung Electric Steel Co.",c:"TW",city:"Taichung",r:"EAF",i:0.41,s:"v",p:684,f:31,du:0,l:17,moq:25,otd:96,cap:"540 kt",g:"SWRCH10A, SWRCH18A, SWRCH22A",ce:"ISO 9001, IATF 16949, EPD",vd:"Oct 2026"},
+{id:"m15",n:"Cilegon Wire Rod Industries",c:"ID",city:"Cilegon",r:"BOF",i:null,s:"n",p:535,f:27,du:0,l:14,moq:100,otd:87,cap:"1.1 Mt",g:"SAE1006, SAE1008",ce:"ISO 9001"}];
+const Y={2026:{f:.975,mu:.10,e:90},2027:{f:.95,mu:.20,e:100},2028:{f:.90,mu:.30,e:110},2030:{f:.515,mu:.30,e:126},2034:{f:0,mu:.30,e:126}};
+const BM={BOF:1.364,EAF:0.066},FX=1.08,ROD=1.10,OWN=0.10,TH_DEF=2.408;
+const st={lang:"en",yr:2026,eua:90,vol:500,sort:"score",q:"",cty:new Set(),rt:new Set(),ds:new Set(),ship:45,lead:30,iatf:false,cart:{}};
+try{const s=JSON.parse(localStorage.getItem("landed")||"{}");if(s.lang)st.lang=s.lang;if(s.cart)st.cart=s.cart}catch(e){}
+const save=()=>{try{localStorage.setItem("landed",JSON.stringify({lang:st.lang,cart:st.cart}))}catch(e){}};
+const t=(k,o)=>{let s=T[st.lang][k]??T.en[k]??k;if(o)for(const a in o)s=s.replace("{"+a+"}",o[a]);return s};
+const $=s=>document.querySelector(s);
+const usd=v=>"$"+Math.round(v).toLocaleString("en-US"),eur=v=>"€"+Math.round(v).toLocaleString("en-US");
+const cbamOf=(m,verified)=>{const y=Y[st.yr];let see,fa;if(verified){see=ROD*m.i+OWN;fa=ROD*BM[m.r]*y.f}else{see=TH_DEF*(1+y.mu);fa=BM.EAF*y.f}return Math.max(0,see-fa)*st.eua};
+const calc=()=>{for(const m of M){m.cb=cbamOf(m,m.s==="v");m.cbv=m.i!=null?cbamOf(m,true):null;m.goods=ROD*(m.p+m.f)*(1+m.du);m.tot=m.goods+m.cb*FX;m.co2=m.s==="v"?m.i:CN[m.c].d}
+const lo=a=>Math.min(...a),hi=a=>Math.max(...a),tc=M.map(m=>m.tot),ce=M.map(m=>Math.min(m.co2,4));
+for(const m of M){const a=1-(m.tot-lo(tc))/(hi(tc)-lo(tc)||1),b=1-(Math.min(m.co2,4)-lo(ce))/(hi(ce)-lo(ce)||1),c={v:1,p:.55,n:0}[m.s],d=Math.max(0,Math.min(1,(m.otd-85)/15));m.sc=Math.round(45*a+25*b+20*c+10*d)}};
+const SORTS={score:(a,b)=>b.sc-a.sc,total:(a,b)=>a.tot-b.tot,cbam:(a,b)=>a.cb-b.cb,price:(a,b)=>a.p-b.p,ship:(a,b)=>a.f-b.f,lead:(a,b)=>a.l-b.l,co2:(a,b)=>a.co2-b.co2,name:(a,b)=>a.n.localeCompare(b.n)};
+const SK={score:"s_score",total:"s_total",cbam:"s_cbam",price:"s_price",ship:"s_ship",lead:"s_lead",co2:"s_co2",name:"s_name"};
+const vis=()=>M.filter(m=>(!st.cty.size||st.cty.has(m.c))&&(!st.rt.size||st.rt.has(m.r))&&(!st.ds.size||st.ds.has(m.s))&&m.f<=st.ship&&m.l<=st.lead&&(!st.iatf||m.ce.includes("IATF"))&&(!st.q||(m.n+" "+m.city+" "+m.g+" "+CN[m.c].en+" "+CN[m.c].th).toLowerCase().includes(st.q.toLowerCase()))).sort(SORTS[st.sort]);
+const badge=s=>`<span class="chip ${s}">${t({v:"ver",p:"prov",n:"none"}[s])}</span>`;
+const card=(m,rank)=>{const inC=!!st.cart[m.id];return `<article class="card"><div><div class="rk">#${rank}</div><div class="dial" style="--p:${m.sc}" aria-label="${t("s_score")} ${m.sc}"><span>${m.sc}</span></div></div>
+<div><div class="nm">${m.n}</div><div class="loc">${m.city}, ${CN[m.c][st.lang]} · ${m.g.split(",").slice(0,2).join(",")}</div>
+<div class="chips">${badge(m.s)}<span class="chip">${m.r==="EAF"?t("eaf"):t("bof")}</span>${m.ce.includes("IATF")?'<span class="chip">IATF 16949</span>':""}${m.sp?`<span class="chip sp">${t("sponsTag")}</span>`:""}</div>
+<div class="mets"><div class="met"><div class="l">${t("fob")}</div><div class="v">${usd(m.p)}/t</div></div><div class="met"><div class="l">${t("ship")}</div><div class="v">${usd(m.f)}/t</div></div><div class="met"><div class="l">${t("duty")}</div><div class="v">${m.du?(m.du*100).toFixed(m.du*100%1?2:0)+"%":"0%"}</div></div><div class="met"><div class="l">${t("co2")}</div><div class="v">${m.co2.toFixed(2)}${m.s==="v"?"":` <small>${t("dflt")}</small>`}</div></div><div class="met big"><div class="l">${t("cbam")}</div><div class="v ${m.s==="v"?"ok":"hot"}">${eur(m.cb)}</div></div><div class="met big"><div class="l">${t("total")}</div><div class="v">${usd(m.tot)}</div></div></div>
+${m.s==="p"?`<div class="hint">${t("ifver",{v:eur(m.cbv)})}</div>`:""}</div>
+<div class="acts"><button class="btn" data-det="${m.id}">${t("details")}</button><button class="btn ${inC?"done":"pri"}" data-add="${m.id}">${inC?t("added"):t("add")}</button></div></article>`};
+const kpis=()=>{const v=M.filter(m=>m.s==="v"),bt=Math.min(...M.map(m=>m.tot)),bc=Math.min(...v.map(m=>m.cb)),df=cbamOf(M[2],false),sv=(df-bc)*st.vol;
+$("#kpis").innerHTML=`<div class="kpi"><div class="l">${t("k1")}</div><div class="v num">${usd(bt)}</div><div class="s">${t("k1s")}</div></div><div class="kpi good"><div class="l">${t("k2")}</div><div class="v num">${eur(bc)}</div><div class="s">${t("k2s")}</div></div><div class="kpi hot"><div class="l">${t("k3")}</div><div class="v num">${eur(df)}</div><div class="s">${t("k3s")}</div></div><div class="kpi good"><div class="l">${t("k4")}</div><div class="v num">${eur(sv)}</div><div class="s">${t("k4s")}</div></div>`};
+const filters=()=>{const cnt=k=>M.filter(m=>m.c===k).length;const ck=(grp,val,lab,n)=>`<label class="ck ${st[grp].has(val)?"on":""}"><input type="checkbox" data-g="${grp}" value="${val}" ${st[grp].has(val)?"checked":""}>${lab}${n!=null?` <span class="n">${n}</span>`:""}</label>`;
+$("#filters").innerHTML=`<div class="fh"><b>${t("filters")}</b><button class="link" id="fReset">${t("reset")}</button></div>
+<div class="fg"><h4>${t("country")}</h4><div class="cks">${Object.keys(CN).map(k=>ck("cty",k,CN[k][st.lang],cnt(k))).join("")}</div></div>
+<div class="fg"><h4>${t("route")}</h4><div class="cks">${ck("rt","EAF",t("eaf"))}${ck("rt","BOF",t("bof"))}</div></div>
+<div class="fg"><h4>${t("status")}</h4><div class="cks">${ck("ds","v",t("ver"))}${ck("ds","p",t("prov"))}${ck("ds","n",t("none"))}</div></div>
+<div class="fg"><h4>${t("maxship")}</h4><input class="rng" type="range" id="rShip" min="10" max="45" value="${st.ship}"><div class="rv"><span>$10</span><b>${usd(st.ship)}/t</b></div></div>
+<div class="fg"><h4>${t("maxlead")}</h4><input class="rng" type="range" id="rLead" min="5" max="30" value="${st.lead}"><div class="rv"><span>5</span><b>${st.lead} ${t("days")}</b></div></div>
+<div class="fg"><h4>${t("cert")}</h4><div class="cks"><label class="ck ${st.iatf?"on":""}"><input type="checkbox" id="iatf" ${st.iatf?"checked":""}>${t("iatf")}</label></div></div>`};
+const list=()=>{const v=vis();$("#count").textContent=t("showing",{n:v.length,m:M.length})+" "+t(SK[st.sort]);
+const sp=M.find(m=>m.sp);$("#spons").innerHTML=sp?`<div class="spons"><p class="sl">${t("spons")}</p>${card(sp,[...M].sort(SORTS.score).indexOf(sp)+1).replace('class="card"','class="card" style="margin:0"')}</div>`:"";
+$("#list").innerHTML=v.length?v.map((m,i)=>card(m,i+1)).join(""):`<div class="empty"><p>${t("nomatch")}</p><button class="btn" id="eClr">${t("clear")}</button></div>`;
+$("#ct").textContent=Object.keys(st.cart).length};
+const sorts=()=>{$("#sort").innerHTML=Object.keys(SORTS).map(k=>`<option value="${k}" ${k===st.sort?"selected":""}>${t(SK[k])}</option>`).join("")};
+const i18n=()=>{document.documentElement.lang=st.lang;document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));$("#q").placeholder=t("search");$("#meth").innerHTML=t("meth");$("#lEN").classList.toggle("on",st.lang==="en");$("#lTH").classList.toggle("on",st.lang==="th")};
+const all=()=>{calc();i18n();sorts();kpis();filters();list();if($("#cart").classList.contains("on"))cartView()};
+const open=id=>{$("#scrim").classList.add("on");$(id).classList.add("on")},close=()=>{document.querySelectorAll(".drawer.on,aside.f.on,.scrim.on").forEach(e=>e.classList.remove("on"))};
+const toast=m=>{const e=$("#toast");e.textContent=m;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1800)};
+let dq=50;
+const detail=id=>{const m=M.find(x=>x.id===id);dq=st.cart[id]?.q||Math.max(m.moq,50);$("#dT").textContent=m.n;
+const yrs=[2026,2028,2030,2034],keep=st.yr,vals=yrs.map(y=>{st.yr=y;return cbamOf(m,m.s==="v")});st.yr=keep;const mx=Math.max(...vals,1);
+const trail=[[t("t1"),m.s!=="n"?"y":"n",m.s!=="n"?"":t("notup")],[t("t2"),m.s!=="n"?"y":"n",""],[t("t3"),m.s==="v"?"y":m.s==="p"?"w":"n",m.s==="v"?t("consistent"):m.s==="p"?t("pend"):t("nocheck")],[t("t4"),m.s==="v"?"y":m.s==="p"?"w":"n",m.s==="v"?m.vd:t("pend")]];
+$("#dB").innerHTML=`<div class="sec"><h3>${t("ov")}</h3><dl class="kv"><dt>${t("plant")}</dt><dd>${m.city}, ${CN[m.c][st.lang]}</dd><dt>${t("cap")}</dt><dd>${m.cap}</dd><dt>${t("fob")}</dt><dd>${usd(m.p)}/t</dd><dt>${t("ship")}</dt><dd>${usd(m.f)}/t</dd><dt>${t("duty")}</dt><dd>${(m.du*100).toFixed(m.du?2:0)}%</dd><dt>${t("lead")}</dt><dd>${m.l} ${t("days")}</dd><dt>${t("moq")}</dt><dd>${m.moq} t</dd><dt>${t("otd")}</dt><dd>${m.otd}%</dd><dt>${t("terms")}</dt><dd>L/C, T/T</dd><dt>${t("inc")}</dt><dd>FOB, CFR</dd></dl></div>
+<div class="sec"><h3>${t("grades")}</h3><p style="margin:0">${m.g}</p><h3 style="margin-top:12px">${t("certs")}</h3><p style="margin:0">${m.ce}</p></div>
+<div class="sec"><h3>${t("trail")}</h3><ul class="steps">${trail.map(([a,c,s])=>`<li><span class="dot ${c}"></span><div>${a}${s?`<small>${s}</small>`:""}</div></li>`).join("")}</ul></div>
+<div class="sec"><h3>${t("traj")}</h3>${yrs.map((y,i)=>`<div class="trend"><span>${y}</span><div class="bar"><i class="${m.s==="v"?"":"hot"}" style="width:${vals[i]/mx*100}%"></i></div><b class="num" style="text-align:right">${eur(vals[i])}</b></div>`).join("")}${m.s==="p"?`<p class="hint">${t("ifver",{v:eur(m.cbv)})}</p>`:""}</div>`;
+dFoot(m)};
+const dFoot=m=>{$("#dF").innerHTML=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="font-size:13px;color:var(--mute)">${t("qty")}</span><div class="qty"><button data-dq="-1" aria-label="−">−</button><input id="dqi" type="number" inputmode="numeric" value="${dq}" step="${m.moq}" min="${m.moq}" aria-label="${t("qty")}"><button data-dq="1" aria-label="+">+</button></div><button class="btn pri" style="flex:1" data-dadd="${m.id}">${st.cart[m.id]?t("upd"):t("addN",{q:dq})}</button></div>`};
+const months=()=>{const o=[],d=new Date(2027,0,1);for(let i=0;i<6;i++){o.push(d.toLocaleDateString(st.lang==="th"?"th-TH":"en-GB",{month:"short",year:"numeric"}));d.setMonth(d.getMonth()+1)}return o};
+let sentRef=null;
+const cartView=()=>{const ids=Object.keys(st.cart);if(sentRef){$("#cB").innerHTML=`<div class="ok"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#1F6FB2" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m7 12 3 3 7-7"/></svg><h3 class="sg" style="font-size:22px;margin:8px 0">${t("sent")}</h3><p>${t("ref")}</p><p class="ref">${sentRef}</p><p style="color:var(--mute)">${t("sentS")}</p><div class="sec" style="text-align:left">${t("ev")}</div></div>`;$("#cF").innerHTML=`<button class="btn pri" style="width:100%" id="newRfq">${t("newb")}</button>`;return}
+if(!ids.length){$("#cB").innerHTML=`<div class="empty">${t("empty")}</div>`;$("#cF").innerHTML="";return}
+const mo=months();let rod=0,goods=0,cb=0,co=0;
+$("#cB").innerHTML=ids.map(id=>{const m=M.find(x=>x.id===id),c=st.cart[id],bo=c.q/ROD;rod+=c.q;goods+=m.goods/ROD*c.q;cb+=m.cb*FX*bo;co+=m.co2*c.q;
+return `<div class="line"><div class="top"><div><b class="sg">${m.n}</b><div class="loc">${CN[m.c][st.lang]} · ${badge(m.s)}</div></div><b class="num">${usd(m.tot*bo)}</b></div><div class="row"><div class="qty"><button data-cq="${id}" data-d="-1" aria-label="−">−</button><input data-ci="${id}" type="number" inputmode="numeric" value="${c.q}" step="${m.moq}" min="${m.moq}" aria-label="${t("qty")}"><button data-cq="${id}" data-d="1" aria-label="+">+</button></div><span style="font-size:13px;color:var(--mute)">t</span><label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mute)">${t("month")}<select data-cm="${id}">${mo.map((x,i)=>`<option value="${i}" ${+c.m===i?"selected":""}>${x}</option>`).join("")}</select></label><button class="rm" data-crm="${id}">${t("remove")}</button></div></div>`}).join("")+
+`<div class="sec sum"><h3>${t("sum")}</h3><dl class="kv"><dt>${t("rod")}</dt><dd>${rod.toLocaleString()} t</dd><dt>${t("bolts")}</dt><dd>${Math.round(rod/ROD).toLocaleString()} t</dd><dt>${t("goods")}</dt><dd>${usd(goods)}</dd><dt>${t("cbx")}</dt><dd style="color:var(--hot)">${usd(cb)}</dd><dt>${t("avg")}</dt><dd>${(co/rod).toFixed(2)} t CO₂/t</dd><dt class="tot">${t("tot")}</dt><dd class="tot">${usd(goods+cb)}</dd></dl></div>
+<form class="sec rfq" id="rfq"><label>${t("port")}<select><option>Laem Chabang</option><option>Bangkok Port</option><option>Map Ta Phut</option></select></label><label>${t("incS")}<select><option>CFR</option><option>CIF</option><option>FOB</option></select></label><label>${t("pay")}<select><option>L/C at sight</option><option>L/C 90 days</option><option>T/T 30/70</option></select></label><label>${t("note")}<textarea placeholder="${t("noteph")}"></textarea></label></form>`;
+$("#cF").innerHTML=`<button class="btn pri" style="width:100%" id="sendRfq">${t("send",{n:ids.length})}</button>`};
+const addCart=(id,q)=>{const m=M.find(x=>x.id===id);q=Math.max(m.moq,Math.round(q/m.moq)*m.moq||m.moq);st.cart[id]={q,m:st.cart[id]?.m||0};sentRef=null;save();list();toast(t("toastAdd"))};
+document.addEventListener("click",e=>{const b=e.target.closest("button,[data-close]");if(!b)return;const d=b.dataset;
+if(d.close!==undefined||b===$("#scrim"))close();
+if(b.id==="lEN"||b.id==="lTH"){st.lang=b.id==="lEN"?"en":"th";save();all();if($("#detail").classList.contains("on"))detail($("#detail")._id)}
+if(b.id==="openCart"){cartView();open("#cart")}
+if(b.id==="fOpen"){$("#scrim").classList.add("on");$("#filters").classList.add("on")}
+if(b.id==="fReset"||b.id==="eClr"){st.cty.clear();st.rt.clear();st.ds.clear();st.ship=45;st.lead=30;st.iatf=false;st.q="";$("#q").value="";filters();list()}
+if(d.det){$("#detail")._id=d.det;detail(d.det);open("#detail")}
+if(d.add){if(st.cart[d.add]){delete st.cart[d.add];save();list();toast(t("toastRm"))}else addCart(d.add,Math.max(M.find(x=>x.id===d.add).moq,50))}
+if(d.dq){const m=M.find(x=>x.id===$("#detail")._id);dq=Math.max(m.moq,dq+ +d.dq*m.moq);dFoot(m)}
+if(d.dadd){addCart(d.dadd,dq);dFoot(M.find(x=>x.id===d.dadd))}
+if(d.cq){const m=M.find(x=>x.id===d.cq);st.cart[d.cq].q=Math.max(m.moq,st.cart[d.cq].q+ +d.d*m.moq);save();cartView()}
+if(d.crm){delete st.cart[d.crm];save();list();cartView();toast(t("toastRm"))}
+if(b.id==="sendRfq"){sentRef="LND-27-"+String(Math.floor(1000+Math.random()*9000));st.cart={};save();list();cartView()}
+if(b.id==="newRfq"){sentRef=null;cartView()}});
+$("#scrim").addEventListener("click",close);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+document.addEventListener("change",e=>{const x=e.target;
+if(x.dataset.g){const s=st[x.dataset.g];x.checked?s.add(x.value):s.delete(x.value);filters();list()}
+if(x.id==="iatf"){st.iatf=x.checked;filters();list()}
+if(x.id==="yr"){st.yr=+x.value;st.eua=Y[st.yr].e;$("#eua").value=st.eua;all()}
+if(x.id==="sort"){st.sort=x.value;list()}
+if(x.dataset.cm){st.cart[x.dataset.cm].m=+x.value;save()}
+if(x.dataset.ci){const m=M.find(y=>y.id===x.dataset.ci);st.cart[x.dataset.ci].q=Math.max(m.moq,Math.round(+x.value/m.moq)*m.moq);save();cartView()}
+if(x.id==="dqi"){const m=M.find(y=>y.id===$("#detail")._id);dq=Math.max(m.moq,Math.round(+x.value/m.moq)*m.moq);dFoot(m)}});
+document.addEventListener("input",e=>{const x=e.target;
+if(x.id==="q"){st.q=x.value;list()}
+if(x.id==="rShip"){st.ship=+x.value;x.nextElementSibling.lastElementChild.textContent=usd(st.ship)+"/t";list()}
+if(x.id==="rLead"){st.lead=+x.value;x.nextElementSibling.lastElementChild.textContent=st.lead+" "+t("days");list()}
+if(x.id==="eua"){st.eua=Math.max(0,+x.value||0);calc();kpis();list()}
+if(x.id==="vol"){st.vol=Math.max(0,+x.value||0);kpis()}});
+document.addEventListener("submit",e=>e.preventDefault());
+all();
+try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(e){}
+}
+</script>
+</body>
+</html>
